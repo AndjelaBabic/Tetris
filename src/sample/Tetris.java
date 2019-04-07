@@ -1,14 +1,19 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.text.Normalizer;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Tetris extends Application {
 
@@ -62,7 +67,60 @@ public class Tetris extends Application {
         primaryStage.show();
 
         // Timer
-        //Timer timer = new Timer();
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (object.a.getY() == 0 || object.b.getY() == 0 || object.c.getY() == 0 || object.d.getY() == 0) {
+                    time++;
+                } else {
+                    time = 0;
+                }
+                // for the 2 seconds the block is on the top
+                if (time == 2) {
+                    Text over = new Text("Game over");
+                    over.setFill(Color.RED);
+                    over.setStyle("-fx-font: 70 arial;");
+                    over.setY(250);
+                    over.setX(10);
+                    group.getChildren().add(over);
+                    game = false;
+                }
+                if (time == 15) {
+                    System.exit(0);
+                }
 
+                if (game) {
+                    moveDown(object);
+                    scoreText.setText("Score: " + score);
+                    lines.setText("Lines: " + linesNo);
+                }
+            }
+
+        };
+        timer.schedule(task, 0, 300);
+    }
+
+    private void moveOnKeyPressed(Form form) {
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case RIGHT:
+                        Controller.moveRight(form);
+                        break;
+                    case LEFT:
+                        Controller.moveLeft(form);
+                        break;
+                    case UP:
+                        moveTurn(form);
+                        break;
+                    case DOWN:
+                        moveDown(form);
+                        score++;
+                        break;
+                }
+            }
+        });
     }
 }
