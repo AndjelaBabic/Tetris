@@ -56,10 +56,9 @@ public class Controller {
         Rectangle d = new Rectangle(SIZE - 1, SIZE - 1);
 
         String color;
-        if (randomNumber < 15) {
+        if (randomNumber < 100) {
             color = "j";
             a.setX(XMAX / 2);
-            a.setY(0);
             b.setX(XMAX / 2);
             b.setY(SIZE);
             c.setX(XMAX / 2 - SIZE);
@@ -68,14 +67,12 @@ public class Controller {
             d.setY(SIZE * 2);
         } else if (randomNumber < 30) {
             color = "l";
-            a.setX(XMAX / 2 - SIZE);
-            a.setY(0);
-            b.setX(XMAX / 2 - SIZE);
+            a.setX(XMAX / 2);
+            a.setY(SIZE * 2);
+            b.setX(XMAX / 2);
             b.setY(SIZE);
             c.setX(XMAX / 2 - SIZE);
-            c.setY(SIZE * 2);
             d.setX(XMAX / 2);
-            d.setY(SIZE * 2);
         } else if (randomNumber < 45) {
             // square
             color = "o";
@@ -97,7 +94,7 @@ public class Controller {
             // raketa
             color = "t";
             a.setX(XMAX / 2 - SIZE);
-            a.setY(SIZE); // ovo nam se razlikuje
+            a.setY(SIZE);
             b.setX(XMAX / 2);
             c.setX(XMAX / 2);
             c.setY(SIZE); // i ovo

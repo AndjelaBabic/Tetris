@@ -129,13 +129,85 @@ public class Tetris extends Application {
         Rectangle b = form.b;
         Rectangle c = form.c;
         Rectangle d = form.d;
-        switch (form.getName()) {
+        switch (form.getName()) { // TODO make functions to move with coordinates
             case "j":
-                if (f == 1 && checkBoundries(a, 1, -1)) {
-
+                if (f == 1 && checkBoundries(a, 1, 2) && checkBoundries(b, 0, 1) && checkBoundries(c, 0, -1)
+                        && checkBoundries(d, -1, 0)) {
+                    moveRight(a);
+                    moveDown(a);
+                    moveDown(a);
+                    moveDown(b);
+                    moveUp(c);
+                    moveLeft(d);
+                    form.changeForm();
+                } else if (f == 2 && checkBoundries(a, -1, 0) && checkBoundries(b, 0, -1) && checkBoundries(c, 2, -1)
+                        && checkBoundries(d, 1, -2)) {
+                    moveLeft(a);
+                    moveUp(b);
+                    moveRight(c);
+                    moveRight(c);
+                    moveUp(c);
+                    moveRight(d);
+                    moveUp(d);
+                    moveUp(d);
+                    form.changeForm();
+                } else if (f == 3 && checkBoundries(a, -1, -1) && checkBoundries(c, 0, 2) && checkBoundries(d, 1, 1)) {
+                    moveLeft(a);
+                    moveUp(a);
+                    moveDown(c);
+                    moveDown(c);
+                    moveRight(d);
+                    moveDown(d);
+                    form.changeForm();
+                } else if (checkBoundries(a, 1, -1) && checkBoundries(d, -1, 1) && checkBoundries(c, -2, 0)) {
+                    moveRight(a);
+                    moveUp(a);
+                    moveLeft(d);
+                    moveDown(d);
+                    moveLeft(c);
+                    moveLeft(c);
+                    form.changeForm();
                 }
                 break;
             case "l":
+                if (f == 1 && checkBoundries(a, -1, 0) && checkBoundries(b, 0, 1) && checkBoundries(c, 2, 1)
+                        && checkBoundries(d, 1, 2)) {
+                    moveLeft(a);
+                    moveDown(b);
+                    moveRight(c);
+                    moveRight(c);
+                    moveDown(c);
+                    moveRight(d);
+                    moveDown(d);
+                    moveDown(d);
+                    form.changeForm();
+                } else if (f == 2 && checkBoundries(a, 1, -2) && checkBoundries(b, 0, -1) && checkBoundries(c, 0, 1)
+                        && checkBoundries(d, -1, 0)) {
+                    moveRight(a);
+                    moveUp(a);
+                    moveUp(a);
+                    moveUp(b);
+                    moveDown(c);
+                    moveLeft(d);
+                    form.changeForm();
+                } else if (f == 3 && checkBoundries(a, 1, 1) && checkBoundries(c, -2, 0) && checkBoundries(d, -1, -1)) {
+                    moveRight(a);
+                    moveDown(a);
+                    moveLeft(c);
+                    moveLeft(c);
+                    moveLeft(d);
+                    moveUp(d);
+                    form.changeForm();
+                } else if(checkBoundries(a, -1, 1) && checkBoundries(c, 0, -2) &&
+                checkBoundries(d, 1, -1)){
+                    moveDown(a);
+                    moveLeft(a);
+                    moveUp(c);
+                    moveUp(c);
+                    moveRight(d);
+                    moveUp(d);
+                    form.changeForm();
+                }
                 break;
             case "o":
                 break;
@@ -166,6 +238,11 @@ public class Tetris extends Application {
 
     }
 
+    private void moveRect(Rectangle rect, int x, int y) {
+        rect.setX(rect.getX() + MOVE);
+        rect.setY(rect.getY() - MOVE);
+    }
+
     private void moveRight(Rectangle rect) {
         rect.setX(rect.getX() + MOVE);
     }
@@ -176,6 +253,10 @@ public class Tetris extends Application {
 
     private void moveUp(Rectangle rect) {
         rect.setY(rect.getY() - MOVE);
+    }
+
+    private void moveDown(Rectangle rect) {
+        rect.setY(rect.getY() + MOVE);
     }
 
     private void moveDown(Form form) {
@@ -225,8 +306,8 @@ public class Tetris extends Application {
 
         score += rowsToRemoveIndex.size() * 50;
         linesNo += rowsToRemoveIndex.size();
-    // TODO Try to improve this part 
-        while(rowsToRemoveIndex.size() > 0) {
+        // TODO Try to improve this part
+        while (rowsToRemoveIndex.size() > 0) {
             // get all blocks
             for (Node node : group.getChildren()) {
                 if (node instanceof Rectangle) {
@@ -234,20 +315,20 @@ public class Tetris extends Application {
                 }
             }
             // for current row to delete remove nodes
-            for (Node node : blocks){
+            for (Node node : blocks) {
                 Rectangle rect = (Rectangle) node;
-                if(rect.getY() / SIZE == rowsToRemoveIndex.get(0)){
-                    MESH[(int) rect.getX()/SIZE][(int) rect.getY()/SIZE] = 0;
+                if (rect.getY() / SIZE == rowsToRemoveIndex.get(0)) {
+                    MESH[(int) rect.getX() / SIZE][(int) rect.getY() / SIZE] = 0;
                     group.getChildren().remove(rect);
-                } else{
+                } else {
                     newBlocks.add(node);
                 }
             }
 
-            for (Node node : newBlocks){
+            for (Node node : newBlocks) {
                 Rectangle rect = (Rectangle) node;
-                if(rect.getY()/SIZE < rowsToRemoveIndex.get(0)){
-                    MESH[(int) rect.getX()/SIZE][(int) rect.getY()/SIZE] = 0;
+                if (rect.getY() / SIZE < rowsToRemoveIndex.get(0)) {
+                    MESH[(int) rect.getX() / SIZE][(int) rect.getY() / SIZE] = 0;
                     rect.setY(rect.getY() + SIZE);
                 }
             }
@@ -256,15 +337,15 @@ public class Tetris extends Application {
             newBlocks.clear();
             rowsToRemoveIndex.remove(0);
 
-            for (Node node : group.getChildren()){
-                if(node instanceof Rectangle) blocks.add(node);
+            for (Node node : group.getChildren()) {
+                if (node instanceof Rectangle) blocks.add(node);
             }
 
-            for (Node node : blocks){
+            for (Node node : blocks) {
                 Rectangle rect = (Rectangle) node;
                 try {
-                    MESH[(int) rect.getX()/SIZE][(int) rect.getY()/SIZE] = 1;
-                } catch (ArrayIndexOutOfBoundsException ex){
+                    MESH[(int) rect.getX() / SIZE][(int) rect.getY() / SIZE] = 1;
+                } catch (ArrayIndexOutOfBoundsException ex) {
 
                 }
             }
