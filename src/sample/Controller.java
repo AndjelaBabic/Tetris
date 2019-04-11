@@ -56,7 +56,7 @@ public class Controller {
         Rectangle d = new Rectangle(SIZE - 1, SIZE - 1);
 
         String color;
-        if (randomNumber < 100) {
+        if (randomNumber < 15) {
             color = "j";
             a.setX(XMAX / 2);
             b.setX(XMAX / 2);
@@ -101,7 +101,6 @@ public class Controller {
             d.setX(XMAX / 2 + SIZE);
             d.setY(SIZE);
         } else if (randomNumber < 90) {
-            // raketa
             color = "z";
             a.setX(XMAX / 2 - SIZE);
             b.setX(XMAX / 2);

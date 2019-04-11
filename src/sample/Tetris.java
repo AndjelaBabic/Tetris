@@ -70,14 +70,14 @@ public class Tetris extends Application {
         primaryStage.show();
 
         // Timer
-        Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), ev -> {
+        Timeline timer = new Timeline(new KeyFrame(Duration.millis(500), ev -> {
             if (object.a.getY() == 0 || object.b.getY() == 0 || object.c.getY() == 0 || object.d.getY() == 0) {
                 time++;
             } else {
                 time = 0;
             }
             // for the 2 seconds the block is on the top
-            if (time == 2) {
+            if (time == 3) {
                 Text over = new Text("Game over");
                 over.setFill(Color.RED);
                 over.setStyle("-fx-font: 70 arial;");
@@ -198,8 +198,8 @@ public class Tetris extends Application {
                     moveLeft(d);
                     moveUp(d);
                     form.changeForm();
-                } else if(checkBoundries(a, -1, 1) && checkBoundries(c, 0, -2) &&
-                checkBoundries(d, 1, -1)){
+                } else if (checkBoundries(a, -1, 1) && checkBoundries(c, 0, -2) &&
+                        checkBoundries(d, 1, -1)) {
                     moveDown(a);
                     moveLeft(a);
                     moveUp(c);
@@ -212,12 +212,106 @@ public class Tetris extends Application {
             case "o":
                 break;
             case "s":
+                if ((f == 1 || f == 3) && checkBoundries(a, -1, 0) && checkBoundries(b, -2, -1) && checkBoundries(c, 1, 0)
+                        && checkBoundries(d, 0, -1)) {
+                    moveLeft(a);
+                    moveLeft(b);
+                    moveLeft(b);
+                    moveUp(b);
+                    moveRight(c);
+                    moveUp(d);
+                    form.changeForm();
+                } else if ((f == 2 || f == 4) && checkBoundries(a, 1, 0) && checkBoundries(b, 2, 1) && checkBoundries(c, -1, 0)
+                        && checkBoundries(d, 0, 1)) {
+                    moveRight(a);
+                    moveRight(b);
+                    moveRight(b);
+                    moveDown(b);
+                    moveLeft(c);
+                    moveDown(d);
+                    form.changeForm();
+                }
                 break;
             case "t":
+                if (f == 1 && checkBoundries(a, 1, -1) && checkBoundries(b, 1, 1) && checkBoundries(d, -1, 1)) {
+                    moveRight(a);
+                    moveUp(a);
+                    moveRight(b);
+                    moveDown(b);
+                    moveLeft(d);
+                    moveDown(d);
+                    form.changeForm();
+                } else if (f == 2 && checkBoundries(a, 1, 1) && checkBoundries(b, -1, 1) && checkBoundries(d, -1, -1)) {
+                    moveRight(a);
+                    moveDown(a);
+                    moveLeft(b);
+                    moveDown(b);
+                    moveLeft(d);
+                    moveUp(d);
+                    form.changeForm();
+                } else if (f == 3  && checkBoundries(a, -1, 1) && checkBoundries(b, -1, -1) && checkBoundries(d, 1, -1)) {
+                    moveLeft(a);
+                    moveDown(a);
+                    moveLeft(b);
+                    moveUp(b);
+                    moveRight(d);
+                    moveUp(d);
+                    form.changeForm();
+                } else if (f == 4 && checkBoundries(a, -1, -1) && checkBoundries(b, 1, -1) && checkBoundries(d, 1, 1)) {
+                    moveLeft(a);
+                    moveUp(a);
+                    moveRight(b);
+                    moveUp(b);
+                    moveRight(d);
+                    moveDown(d);
+                    form.changeForm();
+                }
                 break;
             case "z":
+                if ((f == 1 || f == 3) && checkBoundries(a, 2, -1) && checkBoundries(b, 1, 0) && checkBoundries(c, 0, -1)
+                        && checkBoundries(d, -1, 0)) {
+                    moveRight(a);
+                    moveRight(a);
+                    moveUp(a);
+                    moveRight(b);
+                    moveUp(c);
+                    moveLeft(d);
+                    form.changeForm();
+                } else if ((f == 2 || f == 4) && checkBoundries(a, -2, 1) && checkBoundries(b, -1, 0) && checkBoundries(c, 0, 1)
+                        && checkBoundries(d, 1, 0)) {
+                    moveLeft(a);
+                    moveLeft(a);
+                    moveDown(a);
+                    moveLeft(b);
+                    moveDown(c);
+                    moveRight(d);
+                    form.changeForm();
+                }
                 break;
             case "i":
+                if ((f == 1 || f == 3) && checkBoundries(a, 2, -1) && checkBoundries(b, 1, 0) && checkBoundries(c, 0, 1)
+                        && checkBoundries(d, -1, 2)) {
+                    moveRight(a);
+                    moveRight(a);
+                    moveUp(a);
+                    moveRight(b);
+                    moveDown(c);
+                    moveLeft(d);
+                    moveDown(d);
+                    moveDown(d);
+                    form.changeForm();
+                } else if ((f == 2 || f == 4)  && checkBoundries(a, -2, 1) && checkBoundries(b, -1, 0) && checkBoundries(c, 0, -1)
+                        && checkBoundries(d, 1, -2)) {
+                    moveLeft(a);
+                    moveLeft(a);
+                    moveDown(a);
+                    moveLeft(b);
+                    moveUp(c);
+                    moveRight(d);
+                    moveUp(d);
+                    moveUp(d);
+                    form.changeForm();
+                }
                 break;
         }
 
@@ -233,7 +327,12 @@ public class Tetris extends Application {
         if (rect.getY() + MOVE * y + SIZE <= YMAX || rect.getY() + MOVE * y >= 0) {
             yok = true;
         }
-        return xok && yok && MESH[(int) (rect.getX() / SIZE + x)][(int) (rect.getY() / SIZE + y)] == 0;
+        try {
+            return xok && yok && MESH[(int) (rect.getX() / SIZE + x)][(int) (rect.getY() / SIZE + y)] == 0;
+        } catch (ArrayIndexOutOfBoundsException ex){
+            return false;
+        }
+
 
 
     }
