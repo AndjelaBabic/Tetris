@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -20,8 +21,8 @@ import java.util.*;
 
 public class Tetris extends Application {
 
-    public static final int MOVE = 25;
-    public static final int SIZE = 25;
+    public static final int MOVE = 30;
+    public static final int SIZE = 30;
     public static int XMAX = SIZE * 12;
     public static int YMAX = SIZE * 24;
     public static int MESH[][] = new int[XMAX / SIZE][YMAX / SIZE];
@@ -67,6 +68,7 @@ public class Tetris extends Application {
         nextObj = Controller.makeRect();
         primaryStage.setScene(scene);
         primaryStage.setTitle("TETRIS");
+        primaryStage.getIcons().add(new Image("file:tetris.png"));
         primaryStage.show();
 
         // Timer
@@ -118,9 +120,15 @@ public class Tetris extends Application {
                         moveDown(form);
                         score++;
                         break;
+                    case SPACE:
+                        moveToBottom(form);
+                        break;
                 }
             }
         });
+    }
+
+    private void moveToBottom(Form form) {
     }
 
     private void moveTurn(Form form) {
@@ -249,7 +257,7 @@ public class Tetris extends Application {
                     moveLeft(d);
                     moveUp(d);
                     form.changeForm();
-                } else if (f == 3  && checkBoundries(a, -1, 1) && checkBoundries(b, -1, -1) && checkBoundries(d, 1, -1)) {
+                } else if (f == 3 && checkBoundries(a, -1, 1) && checkBoundries(b, -1, -1) && checkBoundries(d, 1, -1)) {
                     moveLeft(a);
                     moveDown(a);
                     moveLeft(b);
@@ -300,7 +308,7 @@ public class Tetris extends Application {
                     moveDown(d);
                     moveDown(d);
                     form.changeForm();
-                } else if ((f == 2 || f == 4)  && checkBoundries(a, -2, 1) && checkBoundries(b, -1, 0) && checkBoundries(c, 0, -1)
+                } else if ((f == 2 || f == 4) && checkBoundries(a, -2, 1) && checkBoundries(b, -1, 0) && checkBoundries(c, 0, -1)
                         && checkBoundries(d, 1, -2)) {
                     moveLeft(a);
                     moveLeft(a);
@@ -329,10 +337,9 @@ public class Tetris extends Application {
         }
         try {
             return xok && yok && MESH[(int) (rect.getX() / SIZE + x)][(int) (rect.getY() / SIZE + y)] == 0;
-        } catch (ArrayIndexOutOfBoundsException ex){
+        } catch (ArrayIndexOutOfBoundsException ex) {
             return false;
         }
-
 
 
     }
@@ -371,8 +378,11 @@ public class Tetris extends Application {
             Form a = nextObj;
             nextObj = Controller.makeRect();
             object = a;
-            group.getChildren().addAll(a.a, a.b, a.c, a.d);
-            moveOnKeyPressed(a);
+            if (checkBoundries(a.a, 0, 0) && checkBoundries(a.b, 0, 0) && checkBoundries(a.c, 0, 0) &&
+                    checkBoundries(a.d, 0, 0)) {
+                group.getChildren().addAll(a.a, a.b, a.c, a.d);
+                moveOnKeyPressed(a);
+            }
         }
         // moving the block down
         if (form.a.getY() + MOVE < YMAX && form.b.getY() + MOVE < YMAX && form.c.getY() + MOVE < YMAX && form.d.getY() + MOVE < YMAX
